@@ -1,3 +1,4 @@
+package com.oocl.course;
 
 import org.junit.Test;
 
