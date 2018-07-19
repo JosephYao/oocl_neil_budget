@@ -13,7 +13,6 @@ public class BudgetService {
         return a.getMonth() ==  b.getMonth() && a.getYear() == b.getYear();
     }
 
-
     public double queryBudget(LocalDate start, LocalDate end) {
 
         List<Budget> budgetList = budgetDao.getAllBudges();
