@@ -21,12 +21,16 @@ public class BudgetService {
         if (start.isAfter(end))
             return 0;
 
+        return queryTotal(new Duration(start, end));
+    }
+
+    private double queryTotal(Duration duration) {
         List<Budget> budgets = budgetDao.getAllBudges();
 
-        if (isSameMonth(start, end)) {
+        if (isSameMonth(duration.getStart(), duration.getEnd())) {
             for (Budget budget : budgets) {
-                if (isSameMonth(budget.getDate(), start)) {
-                    return budget.getDailyAmount() * (Period.between(start, end).getDays() + 1);
+                if (isSameMonth(budget.getDate(), duration.getStart())) {
+                    return budget.getDailyAmount() * (Period.between(duration.getStart(), duration.getEnd()).getDays() + 1);
                 }
             }
             return 0;
@@ -34,14 +38,14 @@ public class BudgetService {
 
         double total = 0;
         for (Budget budget : budgets) {
-            if (isSameMonth(budget.getDate(), start)) {
-                total += budget.getDailyAmount() * (Period.between(start, budget.getEnd()).getDays() + 1);
+            if (isSameMonth(budget.getDate(), duration.getStart())) {
+                total += budget.getDailyAmount() * (Period.between(duration.getStart(), budget.getEnd()).getDays() + 1);
             }
-            if (isSameMonth(budget.getDate(), end)) {
-                total += budget.getDailyAmount() * (Period.between(budget.getStart(), end).getDays() + 1);
+            if (isSameMonth(budget.getDate(), duration.getEnd())) {
+                total += budget.getDailyAmount() * (Period.between(budget.getStart(), duration.getEnd()).getDays() + 1);
             }
 
-            for (LocalDate date = start.plusMonths(1); !isSameMonth(date, end); date = date.plusMonths(1)) {
+            for (LocalDate date = duration.getStart().plusMonths(1); !isSameMonth(date, duration.getEnd()); date = date.plusMonths(1)) {
                 if (isSameMonth(budget.getDate(), date))
                     total += budget.getDailyAmount() * (Period.between(budget.getStart(), budget.getEnd()).getDays() + 1);
             }
