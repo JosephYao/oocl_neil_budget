@@ -40,11 +40,9 @@ public class BudgetService {
                 total += (end.getDayOfMonth() + 0.0) / end.lengthOfMonth() * budget.amount;
             }
 
-        }
-        for (LocalDate date = start.plusMonths(1); !isSameMonth(date, end); date = date.plusMonths(1)) {
-            for (Budget budget1 : budgets) {
-                if (isSameMonth(budget1.getDate(), date))
-                    total += budget1.getAmount();
+            for (LocalDate date = start.plusMonths(1); !isSameMonth(date, end); date = date.plusMonths(1)) {
+                if (isSameMonth(budget.getDate(), date))
+                    total += budget.getAmount();
             }
         }
 
