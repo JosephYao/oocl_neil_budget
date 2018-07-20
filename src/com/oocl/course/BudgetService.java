@@ -25,7 +25,7 @@ public class BudgetService {
         if (isSameMonth(start, end)) {
             for (Budget budget : budgets) {
                 if (isSameMonth(budget.getDate(), start)) {
-                    return (end.getDayOfMonth() - start.getDayOfMonth() + 1.0) / start.lengthOfMonth() * budget.getAmount();
+                    return getDailyAmount(budget) * (end.getDayOfMonth() - start.getDayOfMonth() + 1);
                 }
             }
             return 0;
@@ -47,6 +47,10 @@ public class BudgetService {
         }
 
         return total;
+    }
+
+    private double getDailyAmount(Budget budget) {
+        return budget.getAmount() / budget.getDate().lengthOfMonth();
     }
 }
 
