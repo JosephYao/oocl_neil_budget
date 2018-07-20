@@ -33,7 +33,7 @@ public class BudgetService {
         double total = 0;
         for (Budget budget : budgets) {
             if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
-                total += budget.getDailyAmount() * new Duration(duration.getStart(), budget.getEnd()).getDays();
+                total += budget.getDailyAmount() * duration.getOverlappingDays(budget.getDuration());
             }
             if (new Duration(budget.getDate(), duration.getEnd()).isSameMonth()) {
                 total += budget.getDailyAmount() * new Duration(budget.getStart(), duration.getEnd()).getDays();

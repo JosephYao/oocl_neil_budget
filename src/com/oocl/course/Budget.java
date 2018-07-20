@@ -38,4 +38,8 @@ public class  Budget {
     public LocalDate getStart() {
         return date.withDayOfMonth(1);
     }
+
+    public Duration getDuration() {
+        return new Duration(getStart(), getEnd());
+    }
 }
