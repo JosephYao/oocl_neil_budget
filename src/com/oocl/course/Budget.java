@@ -26,4 +26,8 @@ public class  Budget {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+    public double getDailyAmount() {
+        return amount / date.lengthOfMonth();
+    }
 }
