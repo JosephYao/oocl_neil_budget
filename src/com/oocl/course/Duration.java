@@ -1,6 +1,7 @@
 package com.oocl.course;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.YearMonth;
 
 public class Duration {
@@ -22,5 +23,9 @@ public class Duration {
 
     public boolean isSameMonth() {
         return YearMonth.from(start).equals(YearMonth.from(end));
+    }
+
+    public int getDays() {
+        return Period.between(start, end).getDays() + 1;
     }
 }

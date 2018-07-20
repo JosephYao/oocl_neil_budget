@@ -1,7 +1,6 @@
 package com.oocl.course;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 public class BudgetService {
@@ -22,10 +21,10 @@ public class BudgetService {
     private double queryTotal(Duration duration) {
         List<Budget> budgets = budgetDao.getAllBudges();
 
-        if (new Duration(duration.getStart(), duration.getEnd()).isSameMonth()) {
+        if (duration.isSameMonth()) {
             for (Budget budget : budgets) {
                 if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
-                    return budget.getDailyAmount() * (Period.between(duration.getStart(), duration.getEnd()).getDays() + 1);
+                    return budget.getDailyAmount() * duration.getDays();
                 }
             }
             return 0;
@@ -34,15 +33,15 @@ public class BudgetService {
         double total = 0;
         for (Budget budget : budgets) {
             if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
-                total += budget.getDailyAmount() * (Period.between(duration.getStart(), budget.getEnd()).getDays() + 1);
+                total += budget.getDailyAmount() * new Duration(duration.getStart(), budget.getEnd()).getDays();
             }
             if (new Duration(budget.getDate(), duration.getEnd()).isSameMonth()) {
-                total += budget.getDailyAmount() * (Period.between(budget.getStart(), duration.getEnd()).getDays() + 1);
+                total += budget.getDailyAmount() * new Duration(budget.getStart(), duration.getEnd()).getDays();
             }
 
             for (LocalDate date = duration.getStart().plusMonths(1); !new Duration(date, duration.getEnd()).isSameMonth(); date = date.plusMonths(1)) {
                 if (new Duration(budget.getDate(), date).isSameMonth())
-                    total += budget.getDailyAmount() * (Period.between(budget.getStart(), budget.getEnd()).getDays() + 1);
+                    total += budget.getDailyAmount() * new Duration(budget.getStart(), budget.getEnd()).getDays();
             }
         }
 
