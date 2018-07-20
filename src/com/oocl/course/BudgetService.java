@@ -1,7 +1,6 @@
 package com.oocl.course;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class BudgetService {
 
@@ -12,16 +11,9 @@ public class BudgetService {
     }
 
     public double queryBudget(LocalDate start, LocalDate end) {
-        List<Budget> budgets = budgetDao.getAllBudges();
-
-        Duration duration = new Duration(start, end);
-        double total = 0;
-
-        for (Budget budget : budgets) {
-            total += budget.getOverlappingAmount(duration);
-        }
-
-        return total;
+        return budgetDao.getAllBudges().stream()
+                .mapToDouble(budget -> budget.getOverlappingAmount(new Duration(start, end)))
+                .sum();
     }
 
 }
