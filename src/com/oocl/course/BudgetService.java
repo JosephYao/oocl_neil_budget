@@ -2,7 +2,6 @@ package com.oocl.course;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.YearMonth;
 import java.util.List;
 
 public class BudgetService {
@@ -11,10 +10,6 @@ public class BudgetService {
 
     public BudgetService(BudgetDao budgetDao) {
         this.budgetDao = budgetDao;
-    }
-
-    private boolean isSameMonth(LocalDate start, LocalDate end) {
-        return YearMonth.from(start).equals(YearMonth.from(end));
     }
 
     public double queryBudget(LocalDate start, LocalDate end) {
@@ -27,9 +22,9 @@ public class BudgetService {
     private double queryTotal(Duration duration) {
         List<Budget> budgets = budgetDao.getAllBudges();
 
-        if (isSameMonth(duration.getStart(), duration.getEnd())) {
+        if (new Duration(duration.getStart(), duration.getEnd()).isSameMonth()) {
             for (Budget budget : budgets) {
-                if (isSameMonth(budget.getDate(), duration.getStart())) {
+                if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
                     return budget.getDailyAmount() * (Period.between(duration.getStart(), duration.getEnd()).getDays() + 1);
                 }
             }
@@ -38,15 +33,15 @@ public class BudgetService {
 
         double total = 0;
         for (Budget budget : budgets) {
-            if (isSameMonth(budget.getDate(), duration.getStart())) {
+            if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
                 total += budget.getDailyAmount() * (Period.between(duration.getStart(), budget.getEnd()).getDays() + 1);
             }
-            if (isSameMonth(budget.getDate(), duration.getEnd())) {
+            if (new Duration(budget.getDate(), duration.getEnd()).isSameMonth()) {
                 total += budget.getDailyAmount() * (Period.between(budget.getStart(), duration.getEnd()).getDays() + 1);
             }
 
-            for (LocalDate date = duration.getStart().plusMonths(1); !isSameMonth(date, duration.getEnd()); date = date.plusMonths(1)) {
-                if (isSameMonth(budget.getDate(), date))
+            for (LocalDate date = duration.getStart().plusMonths(1); !new Duration(date, duration.getEnd()).isSameMonth(); date = date.plusMonths(1)) {
+                if (new Duration(budget.getDate(), date).isSameMonth())
                     total += budget.getDailyAmount() * (Period.between(budget.getStart(), budget.getEnd()).getDays() + 1);
             }
         }
