@@ -1,6 +1,7 @@
 package com.oocl.course;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class BudgetService {
         if (isSameMonth(start, end)) {
             for (Budget budget : budgets) {
                 if (isSameMonth(budget.getDate(), start)) {
-                    return budget.getDailyAmount() * (end.getDayOfMonth() - start.getDayOfMonth() + 1);
+                    return budget.getDailyAmount() * (Period.between(start, end).getDays() + 1);
                 }
             }
             return 0;
@@ -34,15 +35,15 @@ public class BudgetService {
         double total = 0;
         for (Budget budget : budgets) {
             if (isSameMonth(budget.getDate(), start)) {
-                total += (start.lengthOfMonth() - start.getDayOfMonth() + 1.0) / start.lengthOfMonth() * budget.getAmount();
+                total += budget.getDailyAmount() * (Period.between(start, budget.getEnd()).getDays() + 1);
             }
             if (isSameMonth(budget.getDate(), end)) {
-                total += (end.getDayOfMonth() + 0.0) / end.lengthOfMonth() * budget.amount;
+                total += budget.getDailyAmount() * (Period.between(budget.getStart(), end).getDays() + 1);
             }
 
             for (LocalDate date = start.plusMonths(1); !isSameMonth(date, end); date = date.plusMonths(1)) {
                 if (isSameMonth(budget.getDate(), date))
-                    total += budget.getAmount();
+                    total += budget.getDailyAmount() * (Period.between(budget.getStart(), budget.getEnd()).getDays() + 1);
             }
         }
 
