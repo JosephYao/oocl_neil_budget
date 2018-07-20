@@ -11,35 +11,27 @@ public class  Budget {
         this.date=date;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public double getAmount() {
-        return amount;
     }
 
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public double getDailyAmount() {
+    private double getDailyAmount() {
         return amount / date.lengthOfMonth();
     }
 
-    public LocalDate getEnd() {
+    private LocalDate getEnd() {
         return date.withDayOfMonth(date.lengthOfMonth());
     }
 
-    public LocalDate getStart() {
+    private LocalDate getStart() {
         return date.withDayOfMonth(1);
     }
 
-    public Duration getDuration() {
+    private Duration getDuration() {
         return new Duration(getStart(), getEnd());
     }
 
