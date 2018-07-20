@@ -24,7 +24,7 @@ public class BudgetService {
         if (duration.isSameMonth()) {
             for (Budget budget : budgets) {
                 if (new Duration(budget.getDate(), duration.getStart()).isSameMonth()) {
-                    return budget.getDailyAmount() * duration.getDays();
+                    return budget.getDailyAmount() * duration.getOverlappingDays(budget.getDuration());
                 }
             }
             return 0;
@@ -36,12 +36,12 @@ public class BudgetService {
                 total += budget.getDailyAmount() * duration.getOverlappingDays(budget.getDuration());
             }
             if (new Duration(budget.getDate(), duration.getEnd()).isSameMonth()) {
-                total += budget.getDailyAmount() * new Duration(budget.getStart(), duration.getEnd()).getDays();
+                total += budget.getDailyAmount() * duration.getOverlappingDays(budget.getDuration());
             }
 
             for (LocalDate date = duration.getStart().plusMonths(1); !new Duration(date, duration.getEnd()).isSameMonth(); date = date.plusMonths(1)) {
                 if (new Duration(budget.getDate(), date).isSameMonth())
-                    total += budget.getDailyAmount() * new Duration(budget.getStart(), budget.getEnd()).getDays();
+                    total += budget.getDailyAmount() * duration.getOverlappingDays(budget.getDuration());
             }
         }
 

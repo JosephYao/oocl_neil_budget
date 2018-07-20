@@ -30,6 +30,8 @@ public class Duration {
     }
 
     public int getOverlappingDays(Duration another) {
-        return new Duration(start, another.end).getDays();
+        LocalDate overlappingEnd = end.isBefore(another.end) ? end : another.end;
+        LocalDate overlappingStart = start.isAfter(another.start) ? start : another.start;
+        return new Duration(overlappingStart, overlappingEnd).getDays();
     }
 }
