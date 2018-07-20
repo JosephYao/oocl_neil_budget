@@ -14,9 +14,11 @@ public class BudgetService {
     public double queryBudget(LocalDate start, LocalDate end) {
         List<Budget> budgets = budgetDao.getAllBudges();
 
+        Duration duration = new Duration(start, end);
         double total = 0;
+
         for (Budget budget : budgets) {
-            total += budget.getDailyAmount() * new Duration(start, end).getOverlappingDays(budget.getDuration());
+            total += budget.getOverlappingAmount(duration);
         }
 
         return total;
